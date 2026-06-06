@@ -25,3 +25,33 @@ class Task:  # Task - одна задача
     def __str__(self):
         status = "+" if self.completed else "-"
         return f"[{status}] {self.title} ({self.priority})"
+
+class TaskManager:  # Управление списком задач
+    def __init__(self):
+        self.tasks = []  # список всех задач
+        self.next_id = 1  # id след. задачи
+
+    def add_task(self, title, priority):  # добавить задачу
+        task = Task(self.next_id, title, priority)
+        self.tasks.append(task)
+        self.next_id += 1
+        return task
+
+    def remove_task(self, task_id):  # удалить задачу
+        self.tasks = [task for task in self.tasks if task.id != task_id]
+
+    def toggle_completed(self, task_id):  # переключение статуса задачи
+        for task in self.tasks:
+            if task.id == task_id:
+                task.completed = not task.completed
+                return True
+        return False
+
+    def get_all_tasks(self):  # Все задачи
+        return self.tasks
+
+    def get_task_by_id(self, task_id):  # Найти задачу
+        for task in self.tasks:
+            if task.id == task_id:
+                return task
+            return None
