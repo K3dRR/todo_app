@@ -20,8 +20,18 @@ class Storage:  # Сохранение и загрузка
             print(f"Файл {self.filename} не найден")
             return
 
-        with open(self.filename, "r", encoding="utf-8") as f:
-            tasks_data = json.load(f)
+        if os.path.getsize(self.filename) == 0:
+            print(f"Файл {self.filename} пустой")
+            return
+
+        try:
+            with open(self.filename, "r", encoding="utf-8") as f:
+                tasks_data = json.load(f)
+        except json.JSONDecodeError:
+            print(f"! Файл {self.filename} повреждён")
+            return
+
+        task_manager.tasks = []
 
         for data in tasks_data:
             task = Task.from_dict(data)

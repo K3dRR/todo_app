@@ -1,16 +1,16 @@
-# This is a sample Python script.
+import tkinter as tk
+from models import TaskManager
+from storage import Storage
+from ui import ToDoApp
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+def main():
+    task_manager = TaskManager()
+    storage = Storage()
 
+    root = tk.Tk()
+    app = ToDoApp(root, task_manager, storage)
+    root.mainloop()
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    main()
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
