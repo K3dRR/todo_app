@@ -6,6 +6,7 @@ class ToDoApp:
     def __init__(self, root, task_manager, storage):
         self.root = root
         self.task_manager = task_manager
+        self.task_labels = []
         self.storage = storage
         self.selected_task_id = None
         self.canvas_window = None
@@ -102,6 +103,8 @@ class ToDoApp:
         if event.width > 0 and self.canvas_window:
             self.canvas.itemconfig(self.canvas_window, width=event.width)
 
+        self.update_wraplengths()
+
 
     def on_mousewheel(self, event):
         first, last = self.canvas.yview()
@@ -128,6 +131,7 @@ class ToDoApp:
         return colors.get(priority, "#333333")
 
     def update_task_list(self):
+        self.task_labels.clear()
         canvas_width = self.canvas.winfo_width()
         if canvas_width < 100:
             self.root.after(100, self.update_task_list)
@@ -135,6 +139,7 @@ class ToDoApp:
 
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
+        self.task_labels.clear()
 
         tasks = self.task_manager.get_all_tasks()
         if not tasks:
@@ -196,6 +201,7 @@ class ToDoApp:
                 wraplength=text_width
             )
             title_label.pack(fill=tk.X)
+            self.task_labels.append(title_label)
 
             for w in (task_frame, left_frame, text_frame, title_label, priority_label):
                 w.bind('<Button-1>', lambda e, tid=task.id: self.select_task(tid))
@@ -313,6 +319,12 @@ class ToDoApp:
 
     def manual_save(self):
         self.storage.save(self.task_manager.get_all_tasks())
+
+    def update_wraplengths(self):
+        width = max(self.canvas.winfo_width() - 260, 150)
+
+        for label in self.task_labels:
+            label.configure(wraplength=width)
 
     def on_closing(self):
         self.canvas.unbind_all("<MouseWheel>")
